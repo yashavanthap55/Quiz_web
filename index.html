@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #quiz-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+    <h2>Quiz on AI & Machine Learning</h2>
+    <div id="quiz-container">
+        <p id="question">Loading question...</p>
+        <div id="options"></div>
+        <button onclick="submitAnswer()">Submit</button>
+    </div>
+    <div id="result"></div>
+    <script>
+        const questions = [
+            {
+                question: "What does AI stand for?",
+                options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface"],
+                answer: 0,
+                resource: "https://ai.google/education/"
+            },
+            {
+                question: "Which ML model is best for image recognition?",
+                options: ["SVM", "CNN", "Decision Tree"],
+                answer: 1,
+                resource: "https://developers.google.com/machine-learning"
+            },
+            {
+                question: "What is the primary goal of supervised learning?",
+                options: ["Find patterns in data", "Predict outcomes based on labeled data", "Process data without labels"],
+                answer: 1,
+                resource: "https://cloud.google.com/ai-platform/training/docs/algorithms"
+            },
+            {
+                question: "Which programming language is commonly used for AI and ML?",
+                options: ["Python", "C++", "JavaScript"],
+                answer: 0,
+                resource: "https://developers.google.com/learn/pathways/machine-learning-intro"
+            },
+            {
+                question: "What is the purpose of a neural network?",
+                options: ["To store large amounts of data", "To simulate the human brain for pattern recognition", "To speed up computations"],
+                answer: 1,
+                resource: "https://deepmind.com/"
+            }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById("question").innerText = q.question;
+            
+            let optionsHTML = "";
+            q.options.forEach((opt, index) => {
+                optionsHTML += `<label>
+                    <input type="radio" name="option" value="${index}"> ${opt}
+                </label><br>`;
+            });
+            
+            document.getElementById("options").innerHTML = optionsHTML;
+        }
+        
+        function submitAnswer() {
+            const selected = document.querySelector('input[name="option"]:checked');
+            
+            if (!selected) {
+                alert("Please select an answer");
+                return;
+            }
+        
+            if (parseInt(selected.value) === questions[currentQuestion].answer) {
+                score++;
+            }
+        
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+        
+        function showResults() {
+            let resultHTML = <h3>Your Score: ${score}/${questions.length}</h3>;
+            if (score > 0) {
+                resultHTML += <p>Check out this Google resource: <a href="${questions[currentQuestion].resource}" target="_blank">Click Here</a></p>;
+            } else {
+                resultHTML += <p>Try again! Learn more from <a href="https://developers.google.com/">Google Developer</a></p>;
+            }
+        
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("result").innerHTML = resultHTML;
+        }
+        
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
